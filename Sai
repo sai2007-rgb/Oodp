@@ -1,0 +1,86 @@
+#include <iostream>
+#include <string>
+
+class Warehouse {
+private:
+    std::string name;
+    int itemsStored;
+
+    // Static variables
+    static int totalItemsStored;
+    static int fraudulentTransactionsCount;
+
+public:
+    // Constructor
+    Warehouse(const std::string& warehouseName) : name(warehouseName), itemsStored(0) {}
+
+    // Method to add items
+    void addItems(int quantity) {
+        if (quantity > 0) {
+            itemsStored += quantity;
+            totalItemsStored += quantity;
+            std::cout << quantity << " items added to " << name << ". Total items in " << name << ": " << itemsStored << std::endl;
+        } else {
+            std::cout << "Invalid quantity. Please provide a positive number." << std::endl;
+        }
+    }
+
+    // Method to remove items
+    void removeItems(int quantity) {
+        if (quantity > 0 && quantity <= itemsStored) {
+            itemsStored -= quantity;
+            totalItemsStored -= quantity;
+            std::cout << quantity << " items removed from " << name << ". Total items in " << name << ": " << itemsStored << std::endl;
+        } else {
+            std::cout << "Invalid quantity or insufficient items in the warehouse." << std::endl;
+        }
+    }
+
+    // Method to process payment
+    void processPayment(double amount, bool isFraudulent = false) {
+        if (isFraudulent) {
+            fraudulentTransactionsCount++;
+            std::cout << "Fraudulent transaction detected in " << name << ". Payment rejected." << std::endl;
+        } else {
+            std::cout << "Payment of $" << amount << " processed successfully in " << name << "." << std::endl;
+        }
+    }
+
+    // Static method to get total items stored
+    static int getTotalItemsStored() {
+        return totalItemsStored;
+    }
+
+    // Static method to get fraudulent transactions count
+    static int getFraudulentTransactionsCount() {
+        return fraudulentTransactionsCount;
+    }
+};
+
+// Initialize static variables
+int Warehouse::totalItemsStored = 0;
+int Warehouse::fraudulentTransactionsCount = 0;
+
+int main() {
+    // Create warehouse objects
+    Warehouse warehouse1("Warehouse A");
+    Warehouse warehouse2("Warehouse B");
+
+    // Add items to warehouses
+    warehouse1.addItems(100);
+    warehouse2.addItems(200);
+
+    // Remove items from warehouses
+    warehouse1.removeItems(50);
+    warehouse2.removeItems(75);
+
+    // Process payments
+    warehouse1.processPayment(500.0); // Valid payment
+    warehouse2.processPayment(1000.0, true); // Fraudulent payment
+
+    // Retrieve total items stored and fraudulent transactions count
+    std::cout << "Total items stored in all warehouses: " << Warehouse::getTotalItemsStored() << std::endl;
+    std::cout << "Total fraudulent transactions: " << Warehouse::getFraudulentTransactionsCount() << std::endl;
+
+    return 0;
+}
